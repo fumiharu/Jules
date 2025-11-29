@@ -1,0 +1,9 @@
+apps:
+  - name: "LINE"
+    ios_id: "443904275"
+    android_id: "jp.naver.line.android"
+    countries: ["jp", "us", "tw", "th", "id"] # LINE's major markets
+
+storage:
+  bucket_name: "YOUR_GCS_BUCKET_NAME" # To be overridden by env var or user config
+  base_path: "reviews"

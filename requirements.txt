@@ -1,0 +1,6 @@
+streamlit>=1.30.0
+google-cloud-storage
+google-play-scraper
+pandas
+pyyaml
+requests
