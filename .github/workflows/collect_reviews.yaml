@@ -1,0 +1,34 @@
+name: Collect App Reviews
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  collect-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: '${{ secrets.GCS_SERVICE_ACCOUNT_KEY }}'
+
+    - name: Run Collector Script
+      env:
+        GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+      run: |
+        python src/collector/main.py
