@@ -71,6 +71,17 @@ class StorageManager:
             path = f"{base_path}/{country}/{ym}.json"
             existing_reviews = self._read_json(path) or []
 
+            # Normalize existing reviews date field to datetime object (timezone-aware)
+            for r in existing_reviews:
+                if isinstance(r.get('date'), str):
+                    try:
+                        dt = datetime.datetime.fromisoformat(r['date'])
+                        if dt.tzinfo is None:
+                            dt = dt.replace(tzinfo=datetime.timezone.utc)
+                        r['date'] = dt
+                    except ValueError:
+                        pass # Keep as string if parsing fails (should not happen)
+
             # Merge logic: Deduplicate by ID
             existing_ids = {r['id'] for r in existing_reviews}
             merged = existing_reviews
@@ -80,7 +91,10 @@ class StorageManager:
                     existing_ids.add(nr['id'])
 
             # Sort by date desc
-            merged.sort(key=lambda x: x['date'], reverse=True)
+            # Ensure all dates are comparable (datetime objects).
+            # If any str remains, convert blindly or handle error?
+            # We already converted existing ones above. New ones are already datetime.
+            merged.sort(key=lambda x: x['date'] if isinstance(x['date'], datetime.datetime) else datetime.datetime.min.replace(tzinfo=datetime.timezone.utc), reverse=True)
 
             self._write_json(path, merged)
             affected_files.append({
