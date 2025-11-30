@@ -4,3 +4,4 @@ google-play-scraper
 pandas
 pyyaml
 requests
+python-dotenv

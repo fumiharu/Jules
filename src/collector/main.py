@@ -1,8 +1,12 @@
 import yaml
 import os
 import argparse
+from dotenv import load_dotenv
 from fetcher import fetch_ios_reviews, fetch_android_reviews
 from storage import StorageManager
+
+# Load environment variables from .env file if present
+load_dotenv()
 
 def load_config():
     with open('config.yaml', 'r') as f:

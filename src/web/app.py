@@ -4,6 +4,10 @@ import json
 import os
 from datetime import datetime
 from google.cloud import storage
+from dotenv import load_dotenv
+
+# Load environment variables from .env file if present
+load_dotenv()
 
 # --- Configuration & Setup ---
 st.set_page_config(
